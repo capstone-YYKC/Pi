@@ -49,14 +49,14 @@ class BERTClassifier(nn.Module):
         super(BERTClassifier, self).__init__()
         self.bert = bert
         self.classifier = nn.Linear(hidden_size, num_classes)
-        self.dr_rate = dr_rate  # dr_rate를 멤버 변수로 설정
+        self.dr_rate = dr_rate 
         if dr_rate:
             self.dropout = nn.Dropout(p=dr_rate)
 
     def forward(self, input_ids, attention_mask, token_type_ids):
         outputs = self.bert(input_ids=input_ids, attention_mask=attention_mask, token_type_ids=token_type_ids)
         pooler = outputs.pooler_output
-        if self.dr_rate:  # self.dr_rate를 사용하여 dropout을 적용
+        if self.dr_rate:
             pooler = self.dropout(pooler)
         return self.classifier(pooler)
 
@@ -66,7 +66,7 @@ bertmodel = BertModel.from_pretrained('skt/kobert-base-v1', return_dict=True)
 
 # 모델 생성 및 사전 학습된 가중치 로드
 model = BERTClassifier(bertmodel, dr_rate=0.5).to(device)
-model.load_state_dict(torch.load('./trained_model222.pt', map_location=device))
+model.load_state_dict(torch.load('/home/test01/yykc/bert/trained_model222.pt', map_location=device))
 
 # 예측 함수 정의
 def predict(predict_sentence):
@@ -84,8 +84,7 @@ def predict(predict_sentence):
 
             out = model(input_ids, attention_mask, token_type_ids)
             logits = out.detach().cpu().numpy()[0]
-            # print(logits)
-            # logits = logits[0]
+
             probabilities = np.exp(logits) / np.sum(np.exp(logits))
             print("감정 예측 값")
             for i, prob in enumerate(probabilities):
@@ -98,4 +97,9 @@ def predict(predict_sentence):
               elif i==3:
                 print(f"슬픔: {prob:.4f}")
 
-predict("안녕하세요.")
+            return {
+                "행복": probabilities[0],
+                "중립": probabilities[1],
+                "분노": probabilities[2],
+                "슬픔": probabilities[3]
+            }

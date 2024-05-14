@@ -5,7 +5,7 @@ import time
 
 def CreateComment(diary):
     # api_key 불러오기
-    with open("/home/test01/yykc/openai/api_key.json", 'r') as file:
+    with open("/home/test01/yykc/ai_api/api_key.json", 'r') as file:
         config = json.load(file)
 
 

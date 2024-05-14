@@ -206,7 +206,7 @@ def listen_print_loop(responses: object) -> str:
     return transcript
 
 
-def main() -> None:
+def SpeechToText() -> None:
     """Transcribe speech from audio file."""
     # See http://g.co/cloud/speech/docs/languages
     # for a list of supported languages.
