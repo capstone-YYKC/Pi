@@ -16,7 +16,7 @@ def CreateComment(diary):
 
     query = diary + " 답변은 한글로 100글자 이내로 해줘."
 
-    print(f"prompt:{query}")
+    # print(f"prompt:{query}")
 
     message = client.beta.threads.messages.create(
         thread_id=thread.id,

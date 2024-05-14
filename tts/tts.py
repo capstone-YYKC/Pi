@@ -27,16 +27,15 @@ def play_wav_file(file_path):
 
 from gtts import gTTS
 
-if __name__ == '__main__':
+
+
+def PrintComment(text):
     tts = gTTS(
         text=text,
         lang='ko', slow=False
     )
-    tts.save('example.wav')
+    tts.save('/home/test01/yykc/tts/comment/recent_comment.wav')
+    play_wav_file('/home/test01/yykc/tts/comment/recent_comment.wav')
 
-# WAV 파일 경로 설정
-wav_file_path = "example.wav"
 
-# WAV 파일 재생
-play_wav_file(wav_file_path)
 
