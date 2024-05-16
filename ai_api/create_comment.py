@@ -14,7 +14,7 @@ def CreateComment(diary):
     thread = client.beta.threads.create()
 
 
-    query = diary + " 답변은 한글로 100글자 이내로 해줘."
+    query = diary + " 답변은 한글로 100글자 이내로 해줘. 이모티콘도 쓰면 안돼."
 
     # print(f"prompt:{query}")
 
