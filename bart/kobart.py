@@ -7,8 +7,8 @@ model = BartForConditionalGeneration.from_pretrained('digit82/kobart-summarizati
 
 file_path = '/home/test01/yykc/bart/diary.txt'
 
-with open(file_path, 'r', encoding='utf8') as file:
-    text = file.read()
+# with open(file_path, 'r', encoding='utf8') as file:
+#     text = file.read()
 
 
 def summarization(text):
