@@ -1,9 +1,6 @@
 
 import pygame
 
-# text 입력에 GPT API 불러오면 됨.
-text = "안녕하세요"
-
 def play_wav_file(file_path):
     
     # pygame 초기화
@@ -30,12 +27,13 @@ from gtts import gTTS
 
 
 def PrintComment(text):
+    path = '/home/test01/yykc/tts/comment/recent_comment.wav'
     tts = gTTS(
         text=text,
         lang='ko', slow=False
     )
-    tts.save('/home/test01/yykc/tts/comment/recent_comment.wav')
-    play_wav_file('/home/test01/yykc/tts/comment/recent_comment.wav')
+    tts.save(path)
+    play_wav_file(path)
 
 
 
