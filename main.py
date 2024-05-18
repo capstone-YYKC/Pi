@@ -5,6 +5,7 @@ import switch
 from ai_api.create_comment import CreateComment
 from stt.stt import SpeechToText
 from tts.tts import PrintComment
+from tts.tts import play_wav_file
 import requests
 
 import time
@@ -81,6 +82,9 @@ def process():
 
 
 def main():
+
+    play_wav_file('/home/test01/yykc/loading.wav')
+
     try:
         while True:
             if switch.locker_switch.is_pressed:
