@@ -1,5 +1,7 @@
-
 import pygame
+
+import os, sys; sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir)))
+from username import username
 
 def play_wav_file(file_path):
     
@@ -27,7 +29,7 @@ from gtts import gTTS
 
 
 def PrintComment(text):
-    path = '/home/test01/yykc/tts/comment/recent_comment.wav'
+    path = f'/home/{username}/yykc/tts/comment/recent_comment.wav'
     tts = gTTS(
         text=text,
         lang='ko', slow=False

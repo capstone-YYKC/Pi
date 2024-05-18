@@ -15,6 +15,9 @@ from transformers.optimization import get_cosine_schedule_with_warmup
 import warnings
 warnings.filterwarnings('ignore')
 
+import os, sys; sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir)))
+from username import username
+
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
 max_len = 64
@@ -66,7 +69,7 @@ bertmodel = BertModel.from_pretrained('skt/kobert-base-v1', return_dict=True)
 
 # 모델 생성 및 사전 학습된 가중치 로드
 model = BERTClassifier(bertmodel, dr_rate=0.5).to(device)
-model.load_state_dict(torch.load('/home/test01/yykc/bert/trained_model222.pt', map_location=device))
+model.load_state_dict(torch.load(f'/home/{username}/yykc/bert/trained_model222.pt', map_location=device))
 
 # 예측 함수 정의
 def predict(predict_sentence):

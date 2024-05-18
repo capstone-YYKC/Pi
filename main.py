@@ -1,4 +1,3 @@
-# from bert.predict_emotion import predict
 import bert.predict_emotion
 import bart.kobart
 import switch
@@ -10,6 +9,7 @@ import requests
 
 import time
 
+from username import username
 
 
 
@@ -83,7 +83,7 @@ def process():
 
 def main():
 
-    play_wav_file('/home/test01/yykc/loading.wav')
+    play_wav_file(f'/home/{username}/yykc/loading.wav')
 
     try:
         while True:

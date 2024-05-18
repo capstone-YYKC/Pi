@@ -1,11 +1,13 @@
 from openai import OpenAI
 import json
 import time
+import os, sys; sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir)))
+from username import username
 
 
 def CreateComment(diary):
     # api_key 불러오기
-    with open("/home/test01/yykc/ai_api/api_key.json", 'r') as file:
+    with open(f"/home/{username}/yykc/ai_api/api_key.json", 'r') as file:
         config = json.load(file)
 
 
@@ -38,4 +40,3 @@ def CreateComment(diary):
     msg = client.beta.threads.messages.list(thread_id=thread.id)
 
     return msg.data[0].content[0].text.value
-

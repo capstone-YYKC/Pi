@@ -58,6 +58,8 @@ pytz==2024.1
 PyYAML==6.0.1
 regex==2024.4.28
 requests==2.31.0
+rpi-lgpio==0.6
+RPi.GPIO==0.7.1
 rsa==4.9
 safetensors==0.4.3
 sentencepiece==0.2.0

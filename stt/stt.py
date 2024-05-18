@@ -15,6 +15,9 @@ import pyaudio
 import wave
 import time
 
+import os, sys; sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir)))
+from username import username
+
 
 # 녹음파일을 stt api
 def stt_api(file_path):
@@ -83,6 +86,6 @@ def record_audio(filepath, channels=1, rate=16000, chunk=1024):
 
 
 def SpeechToText():
-    path = "/home/test01/yykc/stt/diary/diary.wav"
+    path = f"/home/{username}/yykc/stt/diary/diary.wav"
     record_audio(filepath = path)
     return stt_api(path)
