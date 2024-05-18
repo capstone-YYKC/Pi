@@ -39,14 +39,14 @@ def process():
 
 
     # 5. 서버로 전송
-    # url  = 'http://18.211.120.39:3000/diary'
+    url  = 'https://100.27.127.192:3000/diary'
 
     # # transcribe_streaming_mic redirection data
     # # diary content 
 
     data = {
         'userIdx' : 3,                  # 유저구분
-        'emotionStatus' : "sad",        # 감정
+        'emotionStatus' : max(emotion, key=emotion.get),        # 감정
         'emotionScore' : 11.2,          # 감정점수
         'content': content,              # 일기
         'consolation': comment,       # 생성된 코멘트
@@ -55,23 +55,28 @@ def process():
 
     print(f"data: {data}")
 
+
     
 
 
-    # # post data diary 
-    # try:
-    #     response = requests.post(url,json = data)
+    # post data diary 
+    try:
+        response = requests.post(
+            url,
+            json = data,
+            verify=False)
 
-    #     # request success
-    #     if(response.status_code == 200):
-    #         print(response.status_code,response.text)
+
+        # request success
+        if(response.status_code == 200):
+            print(response.status_code,response.text)
         
-    #     # fail
-    #     else:
-    #         print(response.status_code,response.text)
+        # fail
+        else:
+            print(response.status_code,response.text)
 
-    # except Exception as e:
-    #     print("An error ouccured : ",e)    
+    except Exception as e:
+        print("An error ouccured : ",e)    
 
 
 
@@ -86,6 +91,7 @@ def main():
             time.sleep(1)  # 1초 간격으로 스위치 상태 확인
 
     except KeyboardInterrupt:
+        
         print("Program stopped by User")
 
 
