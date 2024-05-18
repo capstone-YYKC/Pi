@@ -91,15 +91,15 @@ def predict(predict_sentence):
               if i==0:
                 print(f"행복: {prob:.4f}")
               elif i==1:
-                print(f"중립: {prob:.4f}")
+                print(f"보통: {prob:.4f}")
               elif i==2:
-                print(f"분노: {prob:.4f}")
+                print(f"화남: {prob:.4f}")
               elif i==3:
                 print(f"슬픔: {prob:.4f}")
 
             return {
                 "행복": probabilities[0],
-                "중립": probabilities[1],
-                "분노": probabilities[2],
+                "보통": probabilities[1],
+                "화남": probabilities[2],
                 "슬픔": probabilities[3]
             }
