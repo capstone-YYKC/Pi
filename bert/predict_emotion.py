@@ -106,3 +106,26 @@ def predict(predict_sentence):
                 "화남": probabilities[2],
                 "슬픔": probabilities[3]
             }
+
+
+
+
+
+# 감정 점수 계산 함수
+def calculate_emotion_score(emotion_probabilities):
+    total_score = 0
+    emotion_score_ranges = {
+    '행복': (75, 100),
+    '보통': (50, 74),
+    '화남': (25, 49),
+    '슬픔': (0, 24)
+}
+    for emotion, probability in emotion_probabilities.items():
+        min_score, max_score = emotion_score_ranges[emotion]
+        # 슬픔과 화남은 확률이 높을수록 점수가 낮아지도록
+        if emotion in ['슬픔', '화남']:
+            total_score += probability * (min_score + (1 - probability) * (max_score - min_score))
+        # 중립과 행복은 확률이 높을수록 점수가 높아지도록
+        else:
+            total_score += probability * (min_score + probability * (max_score - min_score))
+    return total_score

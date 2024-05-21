@@ -37,7 +37,7 @@ def process():
     # 다이어리를 인풋으로 넣으면 {'행복': 0.014690425, '중립': 0.89617246, '분노': 0.011883826, '슬픔': 0.07725335} 과 같은 
     # 감정 예측값 리턴
     emotion = bert.predict_emotion.predict(content)      # 감정 예측값
-
+    emotion_score = round(bert.predict_emotion.calculate_emotion_score(emotion),2)
 
     # 5. 서버로 전송
     url  = 'https://100.27.127.192:3000/diary'
@@ -48,7 +48,7 @@ def process():
     data = {
         'userIdx' : 3,                  # 유저구분
         'emotionStatus' : max(emotion, key=emotion.get),        # 감정
-        'emotionScore' : 11.2,          # 감정점수
+        'emotionScore' : emotion_score,          # 감정점수
         'content': content,              # 일기
         'consolation': comment,       # 생성된 코멘트
         'summarize': summarization      # 요약
