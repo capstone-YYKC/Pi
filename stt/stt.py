@@ -33,6 +33,7 @@ def stt_api(file_path):
         encoding=speech.RecognitionConfig.AudioEncoding.LINEAR16,
         sample_rate_hertz=16000,
         language_code="ko-KR",
+        enable_automatic_punctuation=True,
     )
 
     transcript = ""

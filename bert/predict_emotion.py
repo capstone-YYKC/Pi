@@ -18,6 +18,9 @@ warnings.filterwarnings('ignore')
 import os, sys; sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir)))
 from username import username
 
+import re
+
+
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
 max_len = 64
@@ -71,9 +74,46 @@ bertmodel = BertModel.from_pretrained('skt/kobert-base-v1', return_dict=True)
 model = BERTClassifier(bertmodel, dr_rate=0.5).to(device)
 model.load_state_dict(torch.load(f'/home/{username}/yykc/bert/trained_model222.pt', map_location=device))
 
-# 예측 함수 정의
-def predict(predict_sentence):
-    data = [predict_sentence, '0']
+# # 예측 함수 정의
+# def predict(predict_sentence):
+#     data = [predict_sentence, '0']
+#     dataset_another = [data]
+#     another_test = BERTDataset(dataset_another, 0, 1, tokenizer, max_len, True, False)
+#     test_dataloader = DataLoader(another_test, batch_size=batch_size, num_workers=0)
+
+#     model.eval()
+#     with torch.no_grad():
+#         for batch_id, (input_ids, attention_mask, token_type_ids, label) in enumerate(test_dataloader):
+#             input_ids = input_ids.to(device)
+#             attention_mask = attention_mask.to(device)
+#             token_type_ids = token_type_ids.to(device)
+
+#             out = model(input_ids, attention_mask, token_type_ids)
+#             logits = out.detach().cpu().numpy()[0]
+
+#             probabilities = np.exp(logits) / np.sum(np.exp(logits))
+#             print("감정 예측 값")
+#             for i, prob in enumerate(probabilities):
+#               if i==0:
+#                 print(f"행복: {prob:.4f}")
+#               elif i==1:
+#                 print(f"보통: {prob:.4f}")
+#               elif i==2:
+#                 print(f"화남: {prob:.4f}")
+#               elif i==3:
+#                 print(f"슬픔: {prob:.4f}")
+
+#             return {
+#                 "행복": probabilities[0],
+#                 "보통": probabilities[1],
+#                 "화남": probabilities[2],
+#                 "슬픔": probabilities[3]
+#             }
+
+
+# 단일 문장에 대해 예측을 수행하는 함수
+def predict_single_sentence(sentence):
+    data = [sentence, '0']
     dataset_another = [data]
     another_test = BERTDataset(dataset_another, 0, 1, tokenizer, max_len, True, False)
     test_dataloader = DataLoader(another_test, batch_size=batch_size, num_workers=0)
@@ -89,43 +129,55 @@ def predict(predict_sentence):
             logits = out.detach().cpu().numpy()[0]
 
             probabilities = np.exp(logits) / np.sum(np.exp(logits))
-            print("감정 예측 값")
-            for i, prob in enumerate(probabilities):
-              if i==0:
-                print(f"행복: {prob:.4f}")
-              elif i==1:
-                print(f"보통: {prob:.4f}")
-              elif i==2:
-                print(f"화남: {prob:.4f}")
-              elif i==3:
-                print(f"슬픔: {prob:.4f}")
+            emotions = ["행복", "보통", "화남", "슬픔"]
+            max_index = np.argmax(probabilities)
+            return emotions[max_index]
 
-            return {
-                "행복": probabilities[0],
-                "보통": probabilities[1],
-                "화남": probabilities[2],
-                "슬픔": probabilities[3]
-            }
+# 여러 문장에 대해 예측을 수행하는 함수
+def predict(predict_sentence):
+    # 문장을 '.', '?', '!'로 분할
+    sentences = re.split(r'[.?!]', predict_sentence)
+    
+    # 빈 문장 제거
+    sentences = [sentence.strip() for sentence in sentences if sentence.strip()]
 
+    # 감정 빈도수 저장
+    emotion_counts = {
+        "행복": 0,
+        "보통": 0,
+        "화남": 0,
+        "슬픔": 0
+    }
 
+    for sentence in sentences:
+        result = predict_single_sentence(sentence)
+        emotion_counts[result] += 1
+
+    # 감정 빈도수 출력
+    print("감정 예측 빈도수")
+    for emotion, count in emotion_counts.items():
+        print(f"{emotion}: {count}")
+
+    return emotion_counts
 
 
 
 # 감정 점수 계산 함수
-def calculate_emotion_score(emotion_probabilities):
-    total_score = 0
-    emotion_score_ranges = {
-    '행복': (75, 100),
-    '보통': (50, 74),
-    '화남': (25, 49),
-    '슬픔': (0, 24)
-}
-    for emotion, probability in emotion_probabilities.items():
-        min_score, max_score = emotion_score_ranges[emotion]
-        # 슬픔과 화남은 확률이 높을수록 점수가 낮아지도록
-        if emotion in ['슬픔', '화남']:
-            total_score += probability * (min_score + (1 - probability) * (max_score - min_score))
-        # 중립과 행복은 확률이 높을수록 점수가 높아지도록
-        else:
-            total_score += probability * (min_score + probability * (max_score - min_score))
-    return total_score
+def calculate_emotion_score(emotion_counts):
+    # 전체 문장의 수
+    total_sentences = sum(emotion_counts.values())
+
+    # 감정별 가중치
+    weights = {
+        "행복": 100,
+        "보통": 50,
+        "화남": 25,
+        "슬픔": 0
+    }
+
+    # 점수 계산
+    score = 0
+    for emotion, count in emotion_counts.items():
+        score += (count / total_sentences) * weights[emotion]
+
+    return score
