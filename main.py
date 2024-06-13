@@ -22,15 +22,14 @@ def process():
     content = SpeechToText()
     print(f"사용자 입력: {content}")
 
-    # 2. 요약
-    summarization = bart.kobart.summarization(content)
-
     # 3. 코멘트 생성 및 출력
     #CreateComment: 다이어리를 인풋으로 넣으면 comment를 리턴
-    comment = CreateComment(summarization) # 사용자에게 출력할 코멘트
+    comment = CreateComment(content) # 사용자에게 출력할 코멘트
     print(f"comment: {comment}")
     PrintComment(comment)
 
+    # 2. 요약
+    summarization = bart.kobart.summarization(content)
 
     # 4. 감정 예측
     # predict : 
@@ -52,7 +51,7 @@ def process():
     # # diary content 
 
     data = {
-        'userIdx' : 11,                  # 유저구분
+        'userIdx' : 17,                  # 유저구분
         'emotionStatus' : result_emotion,        # 감정
         'emotionScore' : emotion_score,          # 감정점수
         'content': content,              # 일기
