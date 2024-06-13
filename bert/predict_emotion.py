@@ -19,6 +19,7 @@ import os, sys; sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__f
 from username import username
 
 import re
+from collections import OrderedDict
 
 
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
@@ -149,16 +150,24 @@ def predict(predict_sentence):
         "슬픔": 0
     }
 
+
     for sentence in sentences:
         result = predict_single_sentence(sentence)
         emotion_counts[result] += 1
 
+    ordered_emotion_counts = OrderedDict([
+        ("슬픔", emotion_counts["슬픔"]),
+        ("화남", emotion_counts["화남"]),
+        ("보통", emotion_counts["보통"]),
+        ("행복", emotion_counts["행복"])
+    ])
+
     # 감정 빈도수 출력
     print("감정 예측 빈도수")
-    for emotion, count in emotion_counts.items():
+    for emotion, count in ordered_emotion_counts.items():
         print(f"{emotion}: {count}")
 
-    return emotion_counts
+    return ordered_emotion_counts
 
 
 
