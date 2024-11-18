@@ -57,53 +57,65 @@ def angle_to_duty_cycle(angle):
     """각도를 PWM의 듀티 사이클로 변환 (0도 ~ 180도)"""
     return 2 + (angle / 18)  # 듀티 사이클 변환
 
-def nodding():
+def nodding(stop_event):
     """머리 끄덕임 동작"""
     try:
-        while True:
+        while not stop_event.is_set():
             activate_servo_slowly(head_pwm, 0, 54, step=3, delay=0.05)
             print("Head value = 54")
             sleep(0.2)
             activate_servo_slowly(head_pwm, 54, 0, step=3, delay=0.05)
             print("Head value = 0")
             sleep(0.2)
+
     except KeyboardInterrupt:
+        print("interrupted")
+
+    finally:
         activate_servo(head_pwm, 0)
         sleep(1)
         deactivate_servo(head_pwm)
 
-def waving_hand():
+def waving_hand(stop_event):
     """손 흔들기 동작"""
     activate_servo(r_arm_pwm, 180)
     sleep(1)
     deactivate_servo(r_arm_pwm)
     try:
-        while True:
+        while not stop_event.is_set():
             activate_servo_slowly(r_shoulder_pwm, 180, 110, step=3, delay=0.05)
             print("r_shoulder value = 110")
             sleep(0.2)
             activate_servo_slowly(r_shoulder_pwm, 110, 180, step=3, delay=0.05)
             print("r_shoulder value = 180")
             sleep(0.2)
+
     except KeyboardInterrupt:
+        print("interrupted.")
+
+    finally:
         activate_servo(r_shoulder_pwm, 180)
         activate_servo(r_arm_pwm, 0)
         sleep(2)
         deactivate_servo(r_shoulder_pwm)
         deactivate_servo(r_arm_pwm)
 
-def hug():
+def hug(stop_event):
     """포옹 동작"""
+
     try:
-        while True:
-            activate_servo(l_arm_pwm, 90) 
-            activate_servo(r_arm_pwm, 90)  
+        activate_servo(l_arm_pwm, 90) 
+        activate_servo(r_arm_pwm, 90)  
+        sleep(1)
+        deactivate_servo(l_arm_pwm)
+        deactivate_servo(r_arm_pwm)
+        while not stop_event.is_set():
             sleep(1)
-            deactivate_servo(l_arm_pwm)
-            deactivate_servo(r_arm_pwm)
-            while True:
-                sleep(1)
+
     except KeyboardInterrupt:
+        print("interrupted")
+
+    finally:
         activate_servo(l_arm_pwm, 180)
         activate_servo(r_arm_pwm, 0)
         sleep(2)
