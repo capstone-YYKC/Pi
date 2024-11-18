@@ -1,5 +1,4 @@
 import bert.predict_emotion
-import bart.kobart
 import switch
 from ai_api.create_comment import CreateComment
 from stt.stt import SpeechToText
@@ -8,6 +7,8 @@ from tts.tts import play_wav_file
 import requests
 
 import time
+
+import motor.mttest2
 
 from username import username
 
@@ -28,8 +29,6 @@ def process():
     print(f"comment: {comment}")
     PrintComment(comment)
 
-    # 2. 요약
-    summarization = bart.kobart.summarization(content)
 
     # 4. 감정 예측
     # predict : 
@@ -45,18 +44,17 @@ def process():
     emotion_score = round(bert.predict_emotion.calculate_emotion_score(emotion),2)
 
     # 5. 서버로 전송
-    url  = 'https://100.27.127.192:3000/diary'
+    url  = 'https://www.gomgom.shop/diary'
 
     # # transcribe_streaming_mic redirection data
     # # diary content 
 
     data = {
-        'userIdx' : 17,                  # 유저구분
+        'userId' : 1,                  # 유저구분
         'emotionStatus' : result_emotion,        # 감정
         'emotionScore' : emotion_score,          # 감정점수
-        'content': content,              # 일기
-        'consolation': comment,       # 생성된 코멘트
-        'summarize': summarization      # 요약
+        'content': content              # 일기
+        # 'consolation': comment       # 생성된 코멘트
     }
 
     print(f"data: {data}")
